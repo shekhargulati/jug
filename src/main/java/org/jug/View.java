@@ -66,7 +66,7 @@ public class View implements Viewable {
     public String render(HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException, WebApplicationException {
         ServletContextTemplateResolver templateResolver = new ServletContextTemplateResolver();
-        templateResolver.setTemplateMode("LEGACYHTML5");
+        templateResolver.setTemplateMode("HTML5`");
         templateResolver.setPrefix("/WEB-INF/templates");
         templateResolver.setSuffix(".html");
         templateResolver.setCacheTTLMs(3600000L);
