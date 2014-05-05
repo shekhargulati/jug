@@ -1,4 +1,4 @@
-package org.jug;
+package org.jug.view;
 
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
@@ -17,6 +17,7 @@ import java.util.Set;
 public class View implements Viewable {
 
     public static final String DEFAULT_MODEL_NAME = "model";
+
     private List<String> errors;
 
     /** */
@@ -24,6 +25,7 @@ public class View implements Viewable {
     private Object model;
     private String modelName;
     private boolean redirect;
+    private  boolean absolute;
 
     public View(String path) {
         this(path, null, null);
@@ -49,6 +51,14 @@ public class View implements Viewable {
     public View(String path, boolean redirect) {
         this.path = path;
         this.redirect = redirect;
+        this.absolute = false;
+    }
+
+
+    public View(String path, boolean redirect, boolean absolute) {
+        this.path = path;
+        this.redirect = redirect;
+        this.absolute = absolute;
     }
 
     public String getPath() {
@@ -66,7 +76,7 @@ public class View implements Viewable {
     public String render(HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException, WebApplicationException {
         ServletContextTemplateResolver templateResolver = new ServletContextTemplateResolver();
-        templateResolver.setTemplateMode("HTML5`");
+        templateResolver.setTemplateMode("HTML5");
         templateResolver.setPrefix("/WEB-INF/templates");
         templateResolver.setSuffix(".html");
         templateResolver.setCacheTTLMs(3600000L);
@@ -94,4 +104,7 @@ public class View implements Viewable {
         return this.redirect;
     }
 
+    public boolean isAbsolute() {
+        return absolute;
+    }
 }

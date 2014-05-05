@@ -1,4 +1,4 @@
-package org.jug;
+package org.jug.view;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -14,4 +14,6 @@ public interface Viewable {
     public boolean isRedirect();
 
     public String getPath();
+
+    public boolean isAbsolute();
 }

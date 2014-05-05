@@ -1,4 +1,4 @@
-package org.jug;
+package org.jug.view;
 
 import java.io.Serializable;
 

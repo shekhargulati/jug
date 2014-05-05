@@ -1,7 +1,7 @@
 /**
  * (c) 2010 Copyright by Vivian Steller <vivian@steller.info>. All rights reserved. 
  */
-package org.jug;
+package org.jug.view;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
