@@ -1,6 +1,5 @@
 package org.jug.filters;
 
-
 import org.jug.view.View;
 
 import javax.servlet.http.HttpServletRequest;
@@ -20,22 +19,26 @@ import java.util.logging.Logger;
 @LoggedIn
 public class AuthenticationFilter implements ContainerRequestFilter {
 
-    @Context
-    private HttpServletRequest request;
-    private Logger logger = Logger.getLogger(this.getClass().getName());
+	@Context
+	private HttpServletRequest request;
+	private Logger logger = Logger.getLogger(this.getClass().getName());
 
-    @Override
-    public void filter(ContainerRequestContext requestContext) throws IOException {
-        logger.info("In AuthenticationFilter ...");
-        HttpSession session = request.getSession(false);
-        logger.info("Session " + session);
-        if (session != null) {
-            System.out.println(session.getAttribute("principal"));
-            System.out.println(session.getId());
-        }
-        if (session == null || session.getAttribute("principal") == null) {
-            logger.info("Returing Forbidden...");
-            requestContext.abortWith(Response.status(Response.Status.FORBIDDEN).entity(new View("/signin", true)).build());
-        }
-    }
+	@Override
+	public void filter(ContainerRequestContext requestContext)
+			throws IOException {
+		logger.info("In AuthenticationFilter ...");
+		HttpSession session = request.getSession(false);
+		logger.info("Session " + session);
+		if (session != null) {
+			String principal = session.getAttribute("principal") != null ? session.getAttribute("principal").toString() : null;
+			String sessionId = session.getId();
+			logger.info("Session principal " + principal);
+			logger.info("Sesssion id" + sessionId);
+		}
+		if (session == null || session.getAttribute("principal") == null) {
+			logger.info("Returing Forbidden...");
+			requestContext.abortWith(Response.status(Response.Status.FORBIDDEN)
+					.entity(new View("/signin", true)).build());
+		}
+	}
 }

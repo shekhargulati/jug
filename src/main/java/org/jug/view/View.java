@@ -57,17 +57,31 @@ public class View implements Viewable {
         this.absolute = false;
     }
 
+    public View(String path, boolean redirect, Object model) {
+        this.path = path;
+        this.redirect = redirect;
+        this.absolute = false;
+        this.model = model;
+    }
 
     public View(String path, boolean redirect, boolean absolute) {
         this.path = path;
         this.redirect = redirect;
         this.absolute = absolute;
     }
+    
+    public View(String path, boolean redirect, boolean absolute, Object model) {
+        this.path = path;
+        this.redirect = redirect;
+        this.absolute = absolute;
+        this.model = model;
+    }
 
     public View setTemplateEngine(TemplateEngine templateEngine){
     	this.templateEngine = templateEngine;
     	return this;
     }
+    
     public String getPath() {
         return this.path;
     }
