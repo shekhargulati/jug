@@ -50,8 +50,6 @@ public class ViewWriter implements MessageBodyWriter<Object> {
                 }else{
                     response.sendRedirect(contextPath + path);
                 }
-
-
             } else {
                 String processedTemplate = view.render(request, response);
                 String charset = mediaType.getParameters().get("charset");

@@ -1,6 +1,3 @@
-/**
- * (c) 2010 Copyright by Vivian Steller <vivian@steller.info>. All rights reserved. 
- */
 package org.jug.view;
 
 import java.lang.annotation.Annotation;
@@ -32,8 +29,4 @@ public class ViewResolver {
         return null;
     }
 
-
-    protected Viewable createView(String path, Object model, String modelName) {
-        return new View(path, model, modelName);
-    }
 }

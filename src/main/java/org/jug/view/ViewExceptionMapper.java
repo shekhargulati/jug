@@ -9,9 +9,9 @@ import javax.ws.rs.ext.Provider;
  */
 @Provider
 public class ViewExceptionMapper implements ExceptionMapper<ViewException> {
-
+	
     @Override
     public Response toResponse(ViewException exception) {
-        return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new View("/500", exception.getMessage(), "error")).build();
+        return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new View("/500", exception.getMessage(), "error").setTemplateEngine(exception.getTemplateEngine())).build();
     }
 }

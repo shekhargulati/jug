@@ -1,17 +1,17 @@
 package org.jug.view;
 
-import org.thymeleaf.TemplateEngine;
-import org.thymeleaf.context.WebContext;
-import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.WebApplicationException;
-import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.WebContext;
 
 
 public class View implements Viewable {
@@ -27,6 +27,9 @@ public class View implements Viewable {
     private boolean redirect;
     private  boolean absolute;
 
+	private TemplateEngine templateEngine;
+
+	
     public View(String path) {
         this(path, null, null);
     }
@@ -61,6 +64,10 @@ public class View implements Viewable {
         this.absolute = absolute;
     }
 
+    public View setTemplateEngine(TemplateEngine templateEngine){
+    	this.templateEngine = templateEngine;
+    	return this;
+    }
     public String getPath() {
         return this.path;
     }
@@ -75,13 +82,9 @@ public class View implements Viewable {
 
     public String render(HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException, WebApplicationException {
-        ServletContextTemplateResolver templateResolver = new ServletContextTemplateResolver();
-        templateResolver.setTemplateMode("HTML5");
-        templateResolver.setPrefix("/WEB-INF/templates");
-        templateResolver.setSuffix(".html");
-        templateResolver.setCacheTTLMs(3600000L);
-        TemplateEngine templateEngine = new TemplateEngine();
-        templateEngine.setTemplateResolver(templateResolver);
+    	if(templateEngine == null){
+    		throw new RuntimeException("Template Engine is null");
+    	}
         WebContext context = new WebContext(request, response, request.getServletContext());
         if (this.model != null) {
             if (this.model instanceof Map) {
