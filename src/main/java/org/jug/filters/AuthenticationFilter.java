@@ -22,56 +22,56 @@ import java.util.logging.Logger;
 @LoggedIn
 public class AuthenticationFilter implements ContainerRequestFilter {
 
-	@Context
-	private HttpServletRequest request;
-	private Logger logger = Logger.getLogger(this.getClass().getName());
+    @Context
+    private HttpServletRequest request;
+    private Logger logger = Logger.getLogger(this.getClass().getName());
 
-	@Override
-	public void filter(ContainerRequestContext requestContext)
-			throws IOException {
-		logger.info("In AuthenticationFilter ...");
-		HttpSession session = request.getSession(false);
-		logger.info("Session " + session);
-		if (session != null) {
-			final String principal = session.getAttribute("principal") != null ? session.getAttribute("principal").toString() : null;
-			String sessionId = session.getId();
-			logger.info("Session principal " + principal);
-			logger.info("Sesssion id" + sessionId);
-			if(principal != null){
-			    requestContext.setSecurityContext(new SecurityContext() {
-	                
-	                @Override
-	                public boolean isUserInRole(String role) {
-	                    return false;
-	                }
-	                
-	                @Override
-	                public boolean isSecure() {
-	                    return true;
-	                }
-	                
-	                @Override
-	                public Principal getUserPrincipal() {
-	                    return new Principal() {
-	                        
-	                        @Override
-	                        public String getName() {
-	                            return principal;
-	                        }
-	                    };
-	                }
-	                
-	                @Override
-	                public String getAuthenticationScheme() {
-	                    return null;
-	                }
-	            });
-			}
-		}
-		if (session == null || session.getAttribute("principal") == null) {
-			logger.info("Returing Forbidden...");
-			requestContext.abortWith(Response.status(Response.Status.FORBIDDEN)
-					.entity(new View("/signin", true)).build());
-		}
-	}
+    @Override
+    public void filter(ContainerRequestContext requestContext) throws IOException {
+        logger.info("In AuthenticationFilter ...");
+        HttpSession session = request.getSession(false);
+        logger.info("Session " + session);
+        if (session != null) {
+            final String principal = session.getAttribute("principal") != null ? session.getAttribute("principal")
+                    .toString() : null;
+            String sessionId = session.getId();
+            logger.info("Session principal " + principal);
+            logger.info("Sesssion id" + sessionId);
+            if (principal != null) {
+                requestContext.setSecurityContext(new SecurityContext() {
+
+                    @Override
+                    public boolean isUserInRole(String role) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean isSecure() {
+                        return true;
+                    }
+
+                    @Override
+                    public Principal getUserPrincipal() {
+                        return new Principal() {
+
+                            @Override
+                            public String getName() {
+                                return principal;
+                            }
+                        };
+                    }
+
+                    @Override
+                    public String getAuthenticationScheme() {
+                        return null;
+                    }
+                });
+            }
+        }
+        if (session == null || session.getAttribute("principal") == null) {
+            logger.info("Returing Forbidden...");
+            requestContext.abortWith(Response.status(Response.Status.FORBIDDEN).entity(View.of("/signin", true))
+                    .build());
+        }
+    }
 }

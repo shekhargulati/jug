@@ -22,33 +22,30 @@ import java.util.logging.Logger;
 @Provider
 public class AfterLoginFilter implements ContainerResponseFilter {
 
-	@Context
-	private HttpServletRequest request;
-	private Logger logger = Logger.getLogger(this.getClass().getName());
+    @Context
+    private HttpServletRequest request;
+    private Logger logger = Logger.getLogger(this.getClass().getName());
 
-	@Override
-	public void filter(ContainerRequestContext requestContext, ContainerResponseContext responseContext) throws IOException {
-		logger.info("Inside AfterLoginFilter...");
-		int status = responseContext.getStatus();
-		if (status == Response.Status.OK.getStatusCode()) {
-			HttpSession session = request.getSession();
-			logger.info("AfterLoginFilter sessionId : " + session.getId());
-			Object entity = responseContext.getEntity();
-			logger.info("Response Entity : " + entity);
-			if (entity != null && entity instanceof View) {
-				View view = (View) entity;
-				Object model = view.getModel();
-				if (model instanceof Map) {
-					Map<String, Object> map = (Map) model;
-					Object principal = map.get("principal");
-					if(principal != null){
-						session.setAttribute("principal", principal);
-					}
-					
-				}
+    @Override
+    public void filter(ContainerRequestContext requestContext, ContainerResponseContext responseContext)
+            throws IOException {
+        logger.info("Inside AfterLoginFilter...");
+        int status = responseContext.getStatus();
+        if (status == Response.Status.OK.getStatusCode()) {
+            HttpSession session = request.getSession();
+            logger.info("AfterLoginFilter sessionId : " + session.getId());
+            Object entity = responseContext.getEntity();
+            logger.info("Response Entity : " + entity);
+            if (entity != null && entity instanceof View) {
+                View view = (View) entity;
+                Map<String, Object> model = view.getModel();
+                Object principal = model.get("principal");
+                if (principal != null) {
+                    session.setAttribute("principal", principal);
+                }
 
-			}
-		}
-	}
+            }
+        }
+    }
 
 }

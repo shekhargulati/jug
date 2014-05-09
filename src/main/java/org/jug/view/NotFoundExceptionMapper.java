@@ -13,6 +13,7 @@ public class NotFoundExceptionMapper implements ExceptionMapper<NotFoundExceptio
 
     @Override
     public Response toResponse(NotFoundException exception) {
-        return Response.status(Response.Status.NOT_FOUND).entity(new View("/404", exception.getMessage(), "error")).build();
+        View view = View.of("/404", true);
+        return Response.status(Response.Status.NOT_FOUND).entity(view).build();
     }
 }
