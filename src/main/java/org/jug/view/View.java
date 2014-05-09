@@ -53,6 +53,11 @@ public class View implements Viewable {
         this.model.put(key, value);
         return this;
     }
+    
+    public View withModel(Map<String, Object> model){
+        this.model.putAll(model);
+        return this;
+    }
 
     public String getPath() {
         return this.path;
