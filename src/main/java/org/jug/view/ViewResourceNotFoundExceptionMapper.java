@@ -12,6 +12,6 @@ public class ViewResourceNotFoundExceptionMapper implements ExceptionMapper<View
 
     @Override
     public Response toResponse(ViewResourceNotFoundException exception) {
-        return Response.status(Response.Status.NOT_FOUND).entity(new View("/404", exception.getMessage(), "error")).build();
+        return Response.status(Response.Status.NOT_FOUND).entity(new View("/404", exception.getMessage(), "error").setTemplateEngine(exception.getTemplateEngine())).build();
     }
 }
