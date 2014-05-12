@@ -7,12 +7,15 @@ import javax.servlet.http.HttpSession;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.ext.Provider;
 
 import java.io.IOException;
 import java.security.Principal;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Logger;
 
 /**
@@ -70,6 +73,14 @@ public class AuthenticationFilter implements ContainerRequestFilter {
         }
         if (session == null || session.getAttribute("principal") == null) {
             logger.info("Returing Forbidden...");
+            MediaType mediaType = requestContext.getMediaType();
+            logger.info("Media Type : " + mediaType);
+            if (mediaType != null && mediaType.toString().equals(MediaType.APPLICATION_JSON)) {
+                Map<String, String> json = new HashMap<>();
+                json.put("msg", "You are not logged in");
+                requestContext.abortWith(Response.status(Response.Status.FORBIDDEN).entity(json).build());
+                return;
+            }
             requestContext.abortWith(Response.status(Response.Status.FORBIDDEN).entity(View.of("/signin", true))
                     .build());
         }
