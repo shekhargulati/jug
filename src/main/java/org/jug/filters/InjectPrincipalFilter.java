@@ -1,40 +1,56 @@
 package org.jug.filters;
 
-import org.jug.view.View;
-
+import java.io.IOException;
+import java.security.Principal;
+import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.ws.rs.container.ContainerRequestContext;
-import javax.ws.rs.container.ContainerResponseContext;
-import javax.ws.rs.container.ContainerResponseFilter;
+import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.ext.Provider;
-import java.io.IOException;
-import java.util.Map;
-import java.util.logging.Logger;
 
-/**
- * Created by shekhargulati on 09/05/14.
- */
 @Provider
 @InjectPrincipal
-public class InjectPrincipalFilter implements ContainerResponseFilter {
-
-    private Logger logger = Logger.getLogger(this.getClass().getName());
+public class InjectPrincipalFilter implements ContainerRequestFilter {
 
     @Context
     private HttpServletRequest request;
+    private Logger logger = Logger.getLogger(getClass().getName());
 
+    public void filter(ContainerRequestContext requestContext) throws IOException {
+        this.logger.info("In InjectPrincipalFilter ...");
+        HttpSession session = this.request.getSession(false);
+        this.logger.info("Session " + session);
+        if (session != null) {
+            final String principal = session.getAttribute("principal") != null ? session.getAttribute("principal").toString() : null;
 
-    @Override
-    public void filter(ContainerRequestContext requestContext, ContainerResponseContext responseContext) throws IOException {
-        HttpSession session = request.getSession(false);
-        logger.info("Inside InjectPrincipalFilter filter() with session " + session);
-        if (session != null && session.getAttribute("principal") != null && responseContext.hasEntity()) {
-            View view = (View) responseContext.getEntity();
-            Map<String, Object> model = view.getModel();
-            Object principal = session.getAttribute("principal");
-            model.put("principal", principal);
+            String sessionId = session.getId();
+            this.logger.info("Session principal " + principal);
+            this.logger.info("Sesssion id" + sessionId);
+            if (principal != null)
+                requestContext.setSecurityContext(new SecurityContext() {
+                    public boolean isUserInRole(String role) {
+                        return false;
+                    }
+
+                    public boolean isSecure() {
+                        return true;
+                    }
+
+                    public Principal getUserPrincipal() {
+                        return new Principal() {
+                            public String getName() {
+                                return principal;
+                            }
+                        };
+                    }
+
+                    public String getAuthenticationScheme() {
+                        return null;
+                    }
+                });
         }
     }
 }
