@@ -20,16 +20,17 @@ public class EnableSessionFilter implements ContainerRequestFilter {
 
     @Context
     private HttpServletRequest request;
-    
+
     private Logger logger = Logger.getLogger(this.getClass().getName());
 
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException {
         HttpSession existingSession = request.getSession(false);
         logger.info("Existing Session : " + existingSession);
-        if(existingSession == null){
-        	HttpSession newSession = request.getSession(true);
-        	logger.info("Created new session with id " + newSession.getId());
+        if (existingSession == null) {
+            HttpSession newSession = request.getSession(true);
+            newSession.setMaxInactiveInterval(1 * 60);
+            logger.info("Created new session with id " + newSession.getId());
         }
     }
 }
