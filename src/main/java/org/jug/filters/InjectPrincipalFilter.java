@@ -20,7 +20,7 @@ public class InjectPrincipalFilter implements ContainerRequestFilter {
     private Logger logger = Logger.getLogger(getClass().getName());
 
     public void filter(ContainerRequestContext requestContext) throws IOException {
-        this.logger.info("In InjectPrincipalFilter ...");
+        this.logger.info("Inside InjectPrincipalFilter ...");
         HttpSession session = this.request.getSession(false);
         this.logger.info("Session " + session);
         if (session != null) {
