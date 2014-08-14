@@ -29,7 +29,7 @@ public class EnableSessionFilter implements ContainerRequestFilter {
         logger.info("Existing Session : " + existingSession);
         if (existingSession == null) {
             HttpSession newSession = request.getSession(true);
-            newSession.setMaxInactiveInterval(1 * 60);
+            newSession.setMaxInactiveInterval(-1);
             logger.info("Created new session with id " + newSession.getId());
         }
     }
